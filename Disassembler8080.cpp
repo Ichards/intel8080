@@ -3,7 +3,7 @@
 #include <fstream>
 #include <string>
 #include <string.h>
-#include <sys/stat.h>
+
 
 typedef unsigned char byte;
 
@@ -48,12 +48,7 @@ void Disassemble(byte* p_codeBuffer, int& p_pc) {
 	p_pc += opBytes;	
 
 }
-//taken from stack overflow :/
-long getFileSize(const char* filename) {
-	struct stat stat_buf;
-	int rc = stat(filename, &stat_buf);
-	return rc==0 ? stat_buf.st_size : -1;
-}
+
 	
 using namespace std;
 
@@ -62,10 +57,20 @@ int main(int argc, const char* argv[]) {
 	ifstream file;
 	file.open(argv[1], ios::binary | ios::in);
 	
-	long fileSize = getFileSize(argv[1]);
+	//get file size
+	file.seekg(0, file.end);
+	int fileSize = file.tellg();
+	file.seekg(0, file.beg);
+
+
+
+
+
+	
 	char* currentByte = new char[fileSize];
 	void* byteAddress;
 	byte* byteReader;
+
 
 	for (int i=0; i<fileSize; i++) {
 		file.read(&currentByte[i], 1);	
